@@ -24,6 +24,10 @@ function setMode(mode) {
 async function jogar() {
     if (saldo < 10) return alert("Sem saldo!");
     
+    // NOVIDADE: Recriamos a tira de ícones apenas QUANDO o usuário clica em girar novamente,
+    // preservando o visual da rodada anterior na tela até este momento.
+    setupReels();
+    
     saldo -= 10;
     document.getElementById('saldo').innerText = saldo.toFixed(2);
     document.getElementById('spin-button').disabled = true;
@@ -33,7 +37,6 @@ async function jogar() {
     
     // Anima cada roleta
     const promises = document.querySelectorAll('.icons-container').forEach((container, i) => {
-        // Coloca o ícone vencedor na posição final da animação (ícone de índice 18)
         const icons = container.querySelectorAll('.icon');
         icons[18].innerText = resultados[i];
         
@@ -44,7 +47,7 @@ async function jogar() {
         void container.offsetWidth;
         
         container.style.transition = `top ${2 + (i * 0.5)}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
-        container.style.top = '-2700px'; // Move 18 ícones para cima (18 * 150px)
+        container.style.top = '-2700px'; 
     });
 
     setTimeout(() => {
@@ -92,9 +95,6 @@ function finalizarRodada(res) {
 
     document.getElementById('saldo').innerText = saldo.toFixed(2);
     document.getElementById('spin-button').disabled = false;
-    
-    // Reset visual para o próximo giro
-    setupReels(); 
 }
 
 setupReels();
