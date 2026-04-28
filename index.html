@@ -2,37 +2,53 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Slot Machine - Cassino Pedagógico</title>
+    <title>Cassino Corrupto v2.0 - Modo Influencer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Roleta da Sorte (?)</h1>
+    <div class="casino-wrapper">
+        <h1>SLOT MASTER <span>3000</span></h1>
         
-        <div class="maquina">
-            <div class="slot" id="slot1">🎰</div>
-            <div class="slot" id="slot2">🎰</div>
-            <div class="slot" id="slot3">🎰</div>
+        <div class="maquina-container">
+            <div class="reels">
+                <div class="reel" id="reel1">
+                    <div class="icons-container"></div>
+                </div>
+                <div class="reel" id="reel2">
+                    <div class="icons-container"></div>
+                </div>
+                <div class="reel" id="reel3">
+                    <div class="icons-container"></div>
+                </div>
+            </div>
+            <div class="payline"></div>
         </div>
 
-        <div class="controles">
-            <button id="btn-girar" onclick="girar()">GIRAR (R$ 10)</button>
+        <div class="ui-panel">
+            <button id="spin-button" onclick="jogar()">GIRAR (R$ 10)</button>
+            <div class="stats">
+                <p>Saldo: <strong>R$ <span id="saldo">100.00</span></strong></p>
+                <p id="feedback">Boa sorte!</p>
+            </div>
         </div>
 
-        <div class="painel">
-            <p>Saldo: R$ <span id="saldo">100</span></p>
-            <p id="mensagem">Faça sua aposta!</p>
-        </div>
-        
-        <div class="painel-admin">
-            <p><strong>[Painel do Desenvolvedor]</strong></p>
-            <label>
-                <input type="checkbox" id="toggle-corrupcao" onchange="alternarManipulacao()"> 
-                Ativar Algoritmo Corrupto
-            </label>
-            <p>Taxa de vitória permitida: <span id="taxa-atual">100% (Justo)</span></p>
+        <div class="admin-dashboard">
+            <h3>⚙️ PAINEL DE MANIPULAÇÃO (ADMIN)</h3>
+            <div class="admin-controls">
+                <label class="switch-container">
+                    <input type="radio" name="mode" value="normal" checked onchange="setMode('normal')">
+                    Modo Justo (Aleatório)
+                </label>
+                <label class="switch-container">
+                    <input type="radio" name="mode" value="corrupto" onchange="setMode('corrupto')">
+                    Modo Corrupto (Casa Ganha)
+                </label>
+                <label class="switch-container influencer">
+                    <input type="radio" name="mode" value="influencer" onchange="setMode('influencer')">
+                    Modo Influencer (90% Win)
+                </label>
+            </div>
         </div>
     </div>
 

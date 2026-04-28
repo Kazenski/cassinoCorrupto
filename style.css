@@ -1,11 +1,14 @@
-* {
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+:root {
+    --gold: #f1c40f;
+    --red: #e74c3c;
+    --dark: #1a1a1a;
+    --influencer-purple: #9b59b6;
 }
 
 body {
-    background-color: #2c3e50;
+    background: radial-gradient(circle, #2c3e50 0%, #000 100%);
     color: white;
+    font-family: 'Arial', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,70 +16,107 @@ body {
     margin: 0;
 }
 
-.container {
-    background-color: #34495e;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+.casino-wrapper {
     text-align: center;
-    max-width: 500px;
-    width: 100%;
+    width: 500px;
 }
 
-.maquina {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 30px 0;
-    background-color: #222;
+h1 span { color: var(--gold); }
+
+.maquina-container {
+    background: #333;
     padding: 20px;
-    border-radius: 10px;
-    border: 3px solid #f1c40f;
+    border: 8px solid #444;
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 0 0 50px rgba(0,0,0,0.8);
 }
 
-.slot {
-    font-size: 50px;
-    background-color: white;
-    width: 80px;
-    height: 100px;
+.reels {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
-    border: 2px solid #ccc;
+    gap: 10px;
+    background: #000;
+    padding: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 150px; /* Mostra apenas 1 ícone por vez com clareza */
 }
 
-button {
-    background-color: #e74c3c;
+.reel {
+    background: white;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.icons-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon {
+    font-size: 80px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payline {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+/* UI e Botões */
+.ui-panel {
+    margin-top: 20px;
+    background: #222;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+#spin-button {
+    background: var(--red);
     color: white;
     border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: bold;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background-color: #c0392b;
-}
-
-button:disabled {
-    background-color: #7f8c8d;
-    cursor: not-allowed;
-}
-
-.painel {
-    margin-top: 20px;
+    padding: 15px 40px;
     font-size: 20px;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 5px 0 #c0392b;
 }
 
-.painel-admin {
-    margin-top: 30px;
+#spin-button:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #c0392b;
+}
+
+.admin-dashboard {
+    margin-top: 20px;
+    font-size: 12px;
+    background: rgba(0,0,0,0.5);
     padding: 15px;
-    background-color: #1a252f;
-    border-radius: 5px;
-    font-size: 14px;
-    border: 1px dashed #e74c3c;
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.influencer { color: var(--influencer-purple); font-weight: bold; }
+
+/* Animação de Giro */
+.spinning {
+    transition: top 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
 }

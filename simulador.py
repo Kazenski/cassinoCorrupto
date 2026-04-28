@@ -1,57 +1,53 @@
 import random
 
-simbolos = ['🍒', '🍋', '🍉', '⭐', '💎']
+# Variáveis globais alinhadas com o Front-end
+simbolos = ['🍒', '🍋', '🍉', '⭐', '💎', '🔔']
 custo_aposta = 10
-premio = 50
+premio = 100
 
 
-def simular_cassino(rodadas, modo_corrupto=False, taxa_vitoria_permitida=0.15):
-    saldo_jogador = 1000  # Começa com R$ 1000
-    lucro_cassino = 0
+def simular(nome_cenario, modo, rodadas=1000):
+    saldo = 1000  # Começa com R$ 1000
     vitorias = 0
 
-    print(f"\n--- Iniciando Simulação: {rodadas} giros ---")
-    print(f"Modo Manipulado: {'ATIVADO' if modo_corrupto else 'DESATIVADO'}")
+    for turno in range(1, rodadas + 1):
+        # Trava de Falência: Interrompe a simulação se o dinheiro acabar
+        if saldo < custo_aposta:
+            print(f"Cenário: {nome_cenario}")
+            print(f"[FALÊNCIA] O jogador perdeu tudo no giro {turno}!")
+            print(
+                f"Vitórias antes de falir: {vitorias} | Saldo Final: R${saldo:.2f}")
+            print("-" * 35)
+            return  # Encerra esta simulação específica
 
-    for _ in range(rodadas):
-        if saldo_jogador < custo_aposta:
-            print("O jogador faliu antes de terminar os giros!")
-            break
+        saldo -= custo_aposta
+        res = [random.choice(simbolos) for _ in range(3)]
+        sorteio = random.random()
 
-        saldo_jogador -= custo_aposta
-        lucro_cassino += custo_aposta
+        # Intervenção Algorítmica (O Segredo do Cassino)
+        if modo == 'influencer' and sorteio < 0.90:
+            res = [res[0], res[0], res[0]]  # Força a vitória
 
-        # Sorteio real
-        resultado = [random.choice(simbolos) for _ in range(3)]
+        elif modo == 'corrupto':
+            if res[0] == res[1] == res[2]:
+                # Força a derrota: muda a última roleta
+                while res[2] == res[0]:
+                    res[2] = random.choice(simbolos)
 
-        # Intervenção do algoritmo corrupto
-        if modo_corrupto:
-            sorte_sistema = random.random()
-            if sorte_sistema > taxa_vitoria_permitida:
-                # Força derrota quebrando a trinca
-                while resultado[0] == resultado[1] == resultado[2]:
-                    resultado[2] = random.choice(simbolos)
-            else:
-                # Força vitória
-                resultado[1] = resultado[0]
-                resultado[2] = resultado[0]
-
-        # Verifica vitória
-        if resultado[0] == resultado[1] == resultado[2]:
-            saldo_jogador += premio
-            lucro_cassino -= premio
+        # Contabilidade do turno
+        if res[0] == res[1] == res[2]:
             vitorias += 1
+            saldo += premio
 
-    print("\n[ RESULTADO FINAL ]")
-    print(f"Total de Vitórias: {vitorias} ({(vitorias/rodadas)*100:.2f}%)")
-    print(f"Saldo Final do Jogador: R$ {saldo_jogador:.2f}")
-    print(f"Lucro Líquido do Cassino: R$ {lucro_cassino:.2f}")
-    print("-" * 40)
+    # Resultado caso o jogador sobreviva aos 1000 giros
+    print(f"Cenário: {nome_cenario}")
+    print(f"Vitórias: {vitorias} em {rodadas} giros")
+    print(f"Sobreviveu com Saldo Final: R${saldo:.2f}")
+    print("-" * 35)
 
 
 if __name__ == "__main__":
-    # Teste 1: Aleatoriedade justa (as chances matemáticas reais baseadas nos 5 símbolos)
-    simular_cassino(10000, modo_corrupto=False)
-
-    # Teste 2: Cassino manipulado limitando a 5% de vitórias
-    simular_cassino(10000, modo_corrupto=True, taxa_vitoria_permitida=0.05)
+    print("\n=== INICIANDO SIMULAÇÃO DE 1000 GIROS ===\n")
+    simular("JUSTO (Aleatório Real)", "normal")
+    simular("CORRUPTO (Casa Ganha Sempre)", "corrupto")
+    simular("MODO INFLUENCER (Isca de Marketing)", "influencer")

@@ -1,81 +1,100 @@
-const simbolos = ['🍒', '🍋', '🍉', '⭐', '💎'];
+const simbolos = ['🍒', '🍋', '🍉', '⭐', '💎', '🔔'];
 let saldo = 100;
-const custoAposta = 10;
-const premio = 50;
+let currentMode = 'normal';
 
-// === VARIÁVEIS DE MANIPULAÇÃO (O Segredo do Cassino) ===
-let cassinoCorrupto = false; 
-let taxaVitoriaPermitida = 0.15; // Se corrupto, permite ganhar apenas em 15% das vezes
-
-function alternarManipulacao() {
-    cassinoCorrupto = document.getElementById('toggle-corrupcao').checked;
-    const painelTaxa = document.getElementById('taxa-atual');
-    if (cassinoCorrupto) {
-        painelTaxa.innerText = `${(taxaVitoriaPermitida * 100)}% (Manipulado)`;
-        painelTaxa.style.color = "#e74c3c";
-    } else {
-        painelTaxa.innerText = `Aleatório Real (Justo)`;
-        painelTaxa.style.color = "#2ecc71";
-    }
+// Inicializa as roletas com ícones aleatórios
+function setupReels() {
+    document.querySelectorAll('.icons-container').forEach(container => {
+        container.innerHTML = "";
+        // Criamos uma tira longa de ícones para a animação
+        for (let i = 0; i < 20; i++) {
+            const div = document.createElement('div');
+            div.className = 'icon';
+            div.innerText = simbolos[Math.floor(Math.random() * simbolos.length)];
+            container.appendChild(div);
+        }
+    });
 }
 
-function obterSimboloAleatorio() {
-    return simbolos[Math.floor(Math.random() * simbolos.length)];
+function setMode(mode) {
+    currentMode = mode;
+    console.log("Modo alterado para:", mode);
 }
 
-function girar() {
-    if (saldo < custoAposta) {
-        document.getElementById('mensagem').innerText = "Saldo insuficiente! A casa agradece.";
-        return;
-    }
+async function jogar() {
+    if (saldo < 10) return alert("Sem saldo!");
+    
+    saldo -= 10;
+    document.getElementById('saldo').innerText = saldo.toFixed(2);
+    document.getElementById('spin-button').disabled = true;
+    document.getElementById('feedback').innerText = "Girando...";
 
-    // Deduz a aposta
-    saldo -= custoAposta;
-    atualizarTela();
-    document.getElementById('mensagem').innerText = "Girando...";
-    document.getElementById('btn-girar').disabled = true;
-
-    // Lógica do Algoritmo Burlado
-    let resultado = [obterSimboloAleatorio(), obterSimboloAleatorio(), obterSimboloAleatorio()];
-    let jogadorVaiGanhar = (resultado[0] === resultado[1] && resultado[1] === resultado[2]);
-
-    if (cassinoCorrupto) {
-        // O algoritmo joga um "dado invisível" para ver se o jogador TEM PERMISSÃO para ganhar
-        let sorteDoSistema = Math.random(); 
+    const resultados = calcularResultado();
+    
+    // Anima cada roleta
+    const promises = document.querySelectorAll('.icons-container').forEach((container, i) => {
+        // Coloca o ícone vencedor na posição final da animação (ícone de índice 18)
+        const icons = container.querySelectorAll('.icon');
+        icons[18].innerText = resultados[i];
         
-        if (sorteDoSistema > taxaVitoriaPermitida) {
-            // Se o sistema decidiu que ele deve perder, FORÇAMOS A DERROTA
-            // Garantimos que a roleta 3 seja diferente da roleta 1
-            while (resultado[0] === resultado[1] && resultado[1] === resultado[2]) {
-                resultado[2] = obterSimboloAleatorio(); 
-            }
-            jogadorVaiGanhar = false;
-        } else {
-            // Se o sistema permitiu a vitória, forçamos os 3 a serem iguais
-            resultado[1] = resultado[0];
-            resultado[2] = resultado[0];
-            jogadorVaiGanhar = true;
+        container.style.transition = 'none';
+        container.style.top = '0px';
+        
+        // Força reflow para reiniciar animação
+        void container.offsetWidth;
+        
+        container.style.transition = `top ${2 + (i * 0.5)}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
+        container.style.top = '-2700px'; // Move 18 ícones para cima (18 * 150px)
+    });
+
+    setTimeout(() => {
+        finalizarRodada(resultados);
+    }, 3500);
+}
+
+function calcularResultado() {
+    let res = [
+        simbolos[Math.floor(Math.random() * simbolos.length)],
+        simbolos[Math.floor(Math.random() * simbolos.length)],
+        simbolos[Math.floor(Math.random() * simbolos.length)]
+    ];
+
+    const chance = Math.random();
+
+    if (currentMode === 'corrupto') {
+        // Força derrota: Se der trinca por sorte, muda o último ícone
+        if (res[0] === res[1] && res[1] === res[2]) {
+            while (res[2] === res[0]) res[2] = simbolos[Math.floor(Math.random() * simbolos.length)];
+        }
+    } 
+    else if (currentMode === 'influencer') {
+        // 90% de chance de ganhar
+        if (chance < 0.90) {
+            res[1] = res[0];
+            res[2] = res[0];
         }
     }
 
-    // Animação simples (setTimeout para simular o tempo da roleta)
-    setTimeout(() => {
-        document.getElementById('slot1').innerText = resultado[0];
-        document.getElementById('slot2').innerText = resultado[1];
-        document.getElementById('slot3').innerText = resultado[2];
-
-        if (jogadorVaiGanhar) {
-            saldo += premio;
-            document.getElementById('mensagem').innerText = "🎉 VOCÊ GANHOU! 🎉";
-        } else {
-            document.getElementById('mensagem').innerText = "Você perdeu. Tente novamente!";
-        }
-
-        atualizarTela();
-        document.getElementById('btn-girar').disabled = false;
-    }, 500);
+    return res;
 }
 
-function atualizarTela() {
-    document.getElementById('saldo').innerText = saldo;
+function finalizarRodada(res) {
+    const ganhou = (res[0] === res[1] && res[1] === res[2]);
+    
+    if (ganhou) {
+        saldo += 100;
+        document.getElementById('feedback').innerText = "🔥 VITÓRIA EXPLOSIVA! +R$100";
+        document.getElementById('feedback').style.color = "#2ecc71";
+    } else {
+        document.getElementById('feedback').innerText = "A casa ganhou. Tente novamente.";
+        document.getElementById('feedback').style.color = "#fff";
+    }
+
+    document.getElementById('saldo').innerText = saldo.toFixed(2);
+    document.getElementById('spin-button').disabled = false;
+    
+    // Reset visual para o próximo giro
+    setupReels(); 
 }
+
+setupReels();
