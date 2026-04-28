@@ -59,7 +59,7 @@ rodadas=1000 (Na chamada final das funções): Aumente para 10000 ou 50000. Veja
 A Trava de Derrota while res[2] == res[0]:: Modifique a lógica do modo corrupto. Tente criar uma regra que permita o jogador ganhar apenas se o saldo dele estiver abaixo de R$ 20 (para mantê-lo jogando e iludido).
 
 
-## 🚀 Como testar na sua máquina
+## Como testar na sua máquina
 
 Você não precisa de servidores complexos para rodar este projeto.
 
