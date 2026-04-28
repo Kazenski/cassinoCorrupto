@@ -24,8 +24,6 @@ function setMode(mode) {
 async function jogar() {
     if (saldo < 10) return alert("Sem saldo!");
     
-    // NOVIDADE: Recriamos a tira de ícones apenas QUANDO o usuário clica em girar novamente,
-    // preservando o visual da rodada anterior na tela até este momento.
     setupReels();
     
     saldo -= 10;
@@ -33,21 +31,25 @@ async function jogar() {
     document.getElementById('spin-button').disabled = true;
     document.getElementById('feedback').innerText = "Girando...";
 
+    // NOVIDADE: Detecta a altura atual do ícone definida no CSS (150 ou 100)
+    const style = getComputedStyle(document.documentElement);
+    const iconHeight = parseInt(style.getPropertyValue('--icon-height'));
+    const travelDistance = iconHeight * 18; // Calcula a distância exata para 18 ícones
+
     const resultados = calcularResultado();
     
-    // Anima cada roleta
-    const promises = document.querySelectorAll('.icons-container').forEach((container, i) => {
+    document.querySelectorAll('.icons-container').forEach((container, i) => {
         const icons = container.querySelectorAll('.icon');
         icons[18].innerText = resultados[i];
         
         container.style.transition = 'none';
         container.style.top = '0px';
         
-        // Força reflow para reiniciar animação
         void container.offsetWidth;
         
         container.style.transition = `top ${2 + (i * 0.5)}s cubic-bezier(0.45, 0.05, 0.55, 0.95)`;
-        container.style.top = '-2700px'; 
+        // Aplica o deslocamento dinâmico calculado
+        container.style.top = `-${travelDistance}px`; 
     });
 
     setTimeout(() => {

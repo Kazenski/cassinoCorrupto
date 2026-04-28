@@ -3,6 +3,7 @@
     --red: #e74c3c;
     --dark: #1a1a1a;
     --influencer-purple: #9b59b6;
+    --icon-height: 150px;
 }
 
 body {
@@ -18,7 +19,9 @@ body {
 
 .casino-wrapper {
     text-align: center;
-    width: 500px;
+    width: 95%;        /* Ocupa quase toda a largura em telas pequenas */
+    max-width: 500px;  /* Mas não passa de 500px no desktop */
+    margin: auto;
 }
 
 h1 span { color: var(--gold); }
@@ -39,7 +42,7 @@ h1 span { color: var(--gold); }
     padding: 10px;
     border-radius: 10px;
     overflow: hidden;
-    height: 150px; /* Mostra apenas 1 ícone por vez com clareza */
+    height: var(--icon-height); /* Usa a variável para definir a altura */    
 }
 
 .reel {
@@ -63,7 +66,7 @@ h1 span { color: var(--gold); }
 
 .icon {
     font-size: 80px;
-    height: 150px;
+    height: var(--icon-height); /* Garante que o ícone tenha o tamanho exato da roleta */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -119,4 +122,31 @@ h1 span { color: var(--gold); }
 /* Animação de Giro */
 .spinning {
     transition: top 2s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+
+/* Media Query: Ajustes específicos para Celulares Pequenos */
+@media (max-width: 480px) {
+    :root {
+        --icon-height: 100px; /* Ícones menores no celular */
+    }
+    
+    .icon {
+        font-size: 50px; /* Fonte menor para caber no visor */
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    #spin-button {
+        width: 100%; /* Botão largo para facilitar o toque com o polegar */
+        padding: 20px;
+    }
+
+    .admin-controls {
+        display: flex;
+        flex-direction: column; /* Controles empilhados para não espremer o texto */
+        gap: 10px;
+        text-align: left;
+    }
 }
