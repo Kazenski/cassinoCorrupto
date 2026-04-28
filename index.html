@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slot Machine - Cassino Pedagógico</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>Roleta da Sorte (?)</h1>
+        
+        <div class="maquina">
+            <div class="slot" id="slot1">🎰</div>
+            <div class="slot" id="slot2">🎰</div>
+            <div class="slot" id="slot3">🎰</div>
+        </div>
+
+        <div class="controles">
+            <button id="btn-girar" onclick="girar()">GIRAR (R$ 10)</button>
+        </div>
+
+        <div class="painel">
+            <p>Saldo: R$ <span id="saldo">100</span></p>
+            <p id="mensagem">Faça sua aposta!</p>
+        </div>
+        
+        <div class="painel-admin">
+            <p><strong>[Painel do Desenvolvedor]</strong></p>
+            <label>
+                <input type="checkbox" id="toggle-corrupcao" onchange="alternarManipulacao()"> 
+                Ativar Algoritmo Corrupto
+            </label>
+            <p>Taxa de vitória permitida: <span id="taxa-atual">100% (Justo)</span></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
